@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Form</title>
+  <link rel="stylesheet" href="studentform.css">
+</head>
+<body>
+  
+  <header>
+    <h1>Welcome Student</h1>
+  </header>
+
+  <!-- Student Form Modal -->
+  <div id="studentModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      
+      <h2>Student Enrollment Form</h2>
+      
+      <form id="studentForm">
+        <div class="form-group">
+          <label>Full Name:</label>
+          <input type="text" name="fullname" required>
+        </div>
+
+        <div class="form-group">
+          <label>Gender:</label>
+          <select name="gender" required>
+            <option value="">Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Phone:</label>
+          <input type="text" name="phone" required>
+        </div>
+
+        <div class="form-group">
+          <label>CNIC:</label>
+          <input type="text" name="cnic" required>
+        </div>
+
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Course:</label>
+          <select id="courseSelect" name="course" required>
+            <option value="">Select Course</option>
+            <option>Artificial Intelligence</option>
+            <option>Cyber Security</option>
+            <option>Data Science</option>
+            <option>Cloud Computing</option>
+            <option>Computer Network</option>
+            <option>HTML</option>
+            <option>CSS</option>
+            <option>JavaScript</option>
+            <option>React</option>
+            <option>Node.js</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Campus:</label>
+          <select name="campus" required>
+            <option value="">Select Campus</option>
+            <option>Gulshan</option>
+            <option>Korangi</option>
+            <option>Nazimabad</option>
+            <option>Defence</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Upload Image:</label>
+          <input type="file" name="image">
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="studentform.js"></script>
+</body>
+</html>

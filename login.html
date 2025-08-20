@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <header>
+    <h1>Login</h1>
+  </header>
+
+  <main>
+    <form id="loginForm" class="login-form">
+      <label for="loginEmail">Email</label>
+      <input type="email" id="loginEmail" required placeholder="Enter your email" />
+
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" required placeholder="Enter your password" />
+
+      <button type="submit" class="btn login">Login</button>
+
+      <p class="helper">
+        New here? <a href="signup.html">Create an account</a>
+      </p>
+    </form>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="login.js"></script>
+</body>
+</html>
