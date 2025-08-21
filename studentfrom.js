@@ -5,58 +5,6 @@ const client = supabase.createClient(supabaseUrl, supabaseKey);
 
 console.log(client)
 
-const form = document.getElementById("studentForm");
-
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const fullname = document.getElementById("fullname").value;
-    const gender = document.getElementById("gender").value;
-    const phone = document.getElementById("phone").value;
-    const cnic = document.getElementById("cnic").value;
-    const email = document.getElementById("email").value;
-    const course = document.getElementById("course").value;
-    const campus = document.getElementById("campus").value;
-    const image = document.getElementById("image").value;
-    // const roll_no = document.getElementById("roll_no").value;
- 
-
-    const { data, error } = await client
-        .from("students")
-        .insert([{
-            fullname, gender, phone, cnic, email, course, campus, image
-        }]);
-
-    if (error) {
-        console.error("Error inserting data:", error.message);
-        alert("Data save failed!");
-    } else {
-        console.log("Data inserted:", data);
-        alert("Data saved successfully!");
-        form.reset();
-    }
-});
-
-    
-// =================== Form Submit Handler ===================
-studentForm.addEventListener("submit", async function(e) {
-  e.preventDefault(); // reload prevent
-
-  const formData = new FormData(studentForm);
-  const student = Object.fromEntries(formData.entries());
-
-  // Roll number generate
-  student.roll_no = await generateRollNo(student.campus);
-
-  // Image name store (optional)
-  if (formData.get("image") && formData.get("image").name) {
-    student.image = formData.get("image").name;
-  } else {
-    student.image = "";
-  }
-
-    window.location.href = 'https://haider-zaidi72.github.io/New-Student-From/index.html'
-});
 
 //================= generate roll number according to campus ============ 
 function getCampusPrefix(campus) {
@@ -133,9 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //======== upload image in supabase =============
-
-const form = document.getElementById("studentForm");
-
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -150,26 +95,32 @@ form.addEventListener("submit", async (e) => {
 
     let imageUrl = null;
 
-    // ✅ Upload Image to Supabase Storage
+    // ✅ Image upload only inside async function
     if (imageFile) {
+        const filePath = `students/${Date.now()}_${imageFile.name}`;
+
         const { data: storageData, error: storageError } = await client.storage
-            .from("student-images") // ⚠️ bucket name replace karein
-            .upload(`students/${Date.now()}_${imageFile.name}`, imageFile);
+            .from("student-image")  // bucket name check kar lo
+            .upload(filePath, imageFile, {
+                cacheControl: '3600',
+                upsert: false
+            });
 
         if (storageError) {
             console.error("Image upload failed:", storageError.message);
-            alert("Image upload failed!");
+            alert("Image upload failed: " + storageError.message);
             return;
         } else {
-            const { data: publicUrl } = client.storage
-                .from("student-images")
-                .getPublicUrl(storageData.path);
+            const { data } = client.storage
+                .from("student-image")
+                .getPublicUrl(filePath);
 
-            imageUrl = publicUrl.publicUrl;
+            imageUrl = data.publicUrl;
+            console.log("Image URL:", imageUrl);
         }
     }
 
-    // ✅ Insert Student with image URL
+    // ✅ Insert student data with image URL
     const { data, error } = await client
         .from("students")
         .insert([{
@@ -182,7 +133,7 @@ form.addEventListener("submit", async (e) => {
     } else {
         alert("Data saved successfully!");
         form.reset();
-        window.location = 'index.html';
+        window.location = 'https://haider-zaidi72.github.io/New-Student-From/';
     }
 });
 

@@ -300,4 +300,75 @@ students.forEach(student => {
 
 
 
+//=============== display image in UI start
+
+
+// document.addEventListener("DOMContentLoaded", async () => {
+//   const adminCampus = localStorage.getItem("adminCampus"); 
+//   console.log("Logged in as:", adminCampus);
+
+//   let query = supabase.from("students").select("*");
+
+//   // agar main admin hai to pura data dikhaye
+//   if (adminCampus && adminCampus !== "main") {
+//     query = query.eq("campus", adminCampus);
+//   }
+
+//   const { data, error } = await query;
+
+//   if (error) {
+//     console.error("Error fetching data:", error.message);
+//     return;
+//   }
+
+//   renderTable(data);
+// });
+
+// function renderTable(students) {
+//   const tbody = document.getElementById("studentTableBody");
+//   tbody.innerHTML = "";
+
+//   students.forEach(student => {
+//     const row = `
+//       <tr>
+//         <td>${student.rollno}</td>
+//         <td>${student.fullname}</td>
+//         <td>${student.gender}</td>
+//         <td>${student.phone}</td>
+//         <td>${student.campus}</td>
+//         <td>
+//           <button class="btn btn-sm btn-danger deleteBtn" data-id="${student.id}">Delete</button>
+//         </td>
+//       </tr>
+//     `;
+//     tbody.innerHTML += row;
+//   });
+// }
+
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const adminCampus = localStorage.getItem("adminCampus");
+  console.log("Logged in as:", adminCampus);  // check karne ke liye
+
+  let query = client.from("students").select("*");
+
+  // Sirf "main" admin ko sab data dikhana hai
+  if (adminCampus && adminCampus.toLowerCase() !== "main") {
+    query = query.eq("campus", adminCampus); 
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching data:", error.message);
+    return;
+  }
+
+  console.log("Data loaded:", data); // console me check karo filter ho raha hai ya nahi
+  renderTable(data);
+});
+
+query = query.eq("campus", adminCampus);
+
+
 //=============== display image in UI END
