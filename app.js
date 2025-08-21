@@ -53,3 +53,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+//===========================================
+
+ function loginAs(role) {
+    localStorage.setItem("adminRole", role); // role save ho jayega
+    window.location.href = "databaseui.html"; // redirect ho jaye
+}
