@@ -22,12 +22,12 @@
       <form id="studentForm">
         <div class="form-group">
           <label>Full Name:</label>
-          <input type="text" name="fullname" required>
+          <input type="text" id="fullname" name="fullname" required>
         </div>
 
         <div class="form-group">
           <label>Gender:</label>
-          <select name="gender" required>
+          <select id="gender" name="gender" required>
             <option value="">Select Gender</option>
             <option>Male</option>
             <option>Female</option>
@@ -36,22 +36,22 @@
 
         <div class="form-group">
           <label>Phone:</label>
-          <input type="text" name="phone" required>
+          <input type="text" id="phone" name="phone" required>
         </div>
 
         <div class="form-group">
           <label>CNIC:</label>
-          <input type="text" name="cnic" required>
+          <input type="text" id="cnic" name="cnic" required>
         </div>
 
         <div class="form-group">
           <label>Email:</label>
-          <input type="email" name="email" required>
+          <input type="email" id="email" name="email" required>
         </div>
 
         <div class="form-group">
           <label>Course:</label>
-          <select id="courseSelect" name="course" required>
+          <select id="course" name="course" required>
             <option value="">Select Course</option>
             <option>Artificial Intelligence</option>
             <option>Cyber Security</option>
@@ -68,7 +68,7 @@
 
         <div class="form-group">
           <label>Campus:</label>
-          <select name="campus" required>
+          <select id="campus" name="campus" required>
             <option value="">Select Campus</option>
             <option>Gulshan</option>
             <option>Korangi</option>
@@ -79,7 +79,7 @@
 
         <div class="form-group">
           <label>Upload Image:</label>
-          <input type="file" name="image">
+          <input type="file" id="image" name="image">
         </div>
 
         <button type="submit">Submit</button>
@@ -89,6 +89,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="studentform.js"></script>
+   <script src="studentfrom.js"></script>
 </body>
 </html>

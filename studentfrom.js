@@ -1,3 +1,4 @@
+
 const supabaseUrl = 'https://ungcexrijowskntosbid.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVuZ2NleHJpam93c2tudG9zYmlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1MTczNzIsImV4cCI6MjA3MTA5MzM3Mn0.EUMfWaa8fZBvYgY89KhNo7PXSr5AAyext99pmSoAeag'
 const client = supabase.createClient(supabaseUrl, supabaseKey);
@@ -17,13 +18,13 @@ form.addEventListener("submit", async (e) => {
     const course = document.getElementById("course").value;
     const campus = document.getElementById("campus").value;
     const image = document.getElementById("image").value;
-    const roll_no = document.getElementById("roll_no").value;
+    // const roll_no = document.getElementById("roll_no").value;
  
 
-    const { data, error } = await supabase
+    const { data, error } = await client
         .from("students")
         .insert([{
-            fullname, gender, phone, cnic, email, course, campus, image, roll_no, status
+            fullname, gender, phone, cnic, email, course, campus, image
         }]);
 
     if (error) {
@@ -34,5 +35,6 @@ form.addEventListener("submit", async (e) => {
         alert("Data saved successfully!");
         form.reset();
     }
+    window.location.href = 'https://haider-zaidi72.github.io/New-Student-From/index.html'
 });
 
