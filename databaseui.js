@@ -5,39 +5,57 @@ const client = supabase.createClient(supabaseUrl, supabaseKey);
 
 console.log(client)
 
+
+const statsCards = [
+  {
+    title: "Total Students",
+    id: "totalStudents",
+    count: 0,
+    note: "↑ 0% from last month",
+    color: "bg-primary"
+  },
+  {
+    title: "Active Students",
+    id: "activeStudents",
+    count: 0,
+    note: "↑ 0% of total",
+    color: "bg-success"
+  },
+  {
+    title: "Pending Approval",
+    id: "pendingStudents",
+    count: 0,
+    note: "Needs attention",
+    color: "bg-warning"
+  },
+  {
+    title: "Reject",
+    id: "rejectStudents",
+    count: 0,
+    note: "Needs attention",
+    color: "bg-warning"
+  }
+  
+];
+
+
+ const container = document.getElementById("statsContainer");
+
+  statsCards.forEach(card => {
+    container.innerHTML += `
+      <div class="card text-white ${card.color}">
+        <div class="card-body">
+          <h5>${card.title}</h5>
+          <h3 id="${card.id}">${card.count}</h3>
+          <small>${card.note}</small>
+        </div>
+      </div>
+    `;
+  });
+
 const tbody = document.getElementById('studentTableBody');
 
-  async function loadStudents() {
-    const { data, error } = await client
-      .from('students')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.error('❌ fetch error:', error.message);
-      return;
-    }
-
-    // rows render: put id on <tr>, buttons inside last <td>
-    tbody.innerHTML = data.map(st => `
-      <tr data-id="${st.id}">
-        <td>${st.roll_no}</td>
-        <td><img src="${st.image ? 'https://YOUR_PROJECT.supabase.co/storage/v1/object/public/student-images/' + st.image : 'https://via.placeholder.com/40'}" alt="profile"></td>
-        <td>${st.fullname}</td>
-        <td>${st.phone}</td>
-        <td>${st.cnic}</td>
-        <td>${st.campus}</td>
-        <td>${st.gender}</td>
-        <td>${st.course}</td>
-        <td>Pending</td>
-        <td>
-          <button type="button" class="btn btn-sm btn-info viewBtn"><i class="bi bi-eye"></i></button>
-          <button type="button" class="btn btn-sm btn-warning editBtn"><i class="bi bi-pencil"></i></button>
-          <button type="button" class="btn btn-sm btn-danger deleteBtn"><i class="bi bi-trash"></i></button>
-        </td>
-      </tr>
-    `).join('');
-  }
+  
 
   // ✅ SINGLE delegated handler — works for dynamic rows
   tbody.addEventListener('click', async (e) => {
@@ -75,27 +93,6 @@ const tbody = document.getElementById('studentTableBody');
   loadStudents();
 //==================================================================== 
 
-// Edit button handler (inside tbody event listener)
-document.getElementById("studentTableBody").addEventListener("click", async (e) => {
-  if (e.target.closest('.editBtn')) {
-    const id = e.target.closest('.editBtn').dataset.id;
-
-    let { data, error } = await client
-      .from('students')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      return alert('Error fetching student: ' + error.message);
-    }
-
-    console.log("Student fetched:", data);
-    // ab yahan modal open karke saari fields editable bana sakte ho
-  }
-});
-
-
 // Save changes on form submit
 document.getElementById('editStudentForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -127,7 +124,7 @@ document.getElementById('editStudentForm').addEventListener('submit', async (e) 
 document.getElementById("studentTableBody").addEventListener("click", async (e) => {
   if (e.target.closest(".editBtn")) {
     const id = e.target.closest(".editBtn").dataset.id;
-    let { data, error } = await db.from("students").select("*").eq("id", id).single();
+    let { data, error } = await client.from("students").select("*").eq("id", id).single();
     console.log(data);
   }
 });
@@ -144,12 +141,16 @@ async function loadStudents() {
   tbody.innerHTML = '';
 
   let total = data.length;
-  let active = data.filter(s => s.status === 'Approved').length;
-  let pending = data.filter(s => s.status === 'Pending').length;
+  let active = data.filter(s => s.status === 'approve').length;
+  let pending = data.filter(s => s.status === 'pending').length;
+  let rejected = data.filter(s => s.status === 'rejected').length;
 
   document.getElementById('totalStudents').innerText = total;
   document.getElementById('activeStudents').innerText = active;
   document.getElementById('pendingStudents').innerText = pending;
+   document.getElementById('rejectStudents').innerText = rejected;
+
+  
 
   data.forEach(student => {
     tbody.innerHTML += `
@@ -162,11 +163,13 @@ async function loadStudents() {
         <td>${student.campus}</td>
         <td>${student.gender}</td>
         <td>${student.course}</td>
+        <td>${student.status}</td>
         <td>
           <select class="form-select form-select-sm statusDropdown" data-id="${student.id}">
-            <option value="Pending" ${student.status === 'Pending' ? 'selected' : ''}>Pending</option>
-            <option value="Approved" ${student.status === 'Approved' ? 'selected' : ''}>Approved</option>
-            <option value="Rejected" ${student.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+          <option value="action" ${student.status === 'action' ? 'selected' : ''}>action</option>
+            <option value="pending" ${student.status === 'pending' ? 'selected' : ''}>pending</option>
+            <option value="approve" ${student.status === 'approve' ? 'selected' : ''}>approve</option>
+            <option value="rejected" ${student.status === 'rejected' ? 'selected' : ''}>rejected</option>
           </select>
         </td>
         <td>
@@ -267,92 +270,13 @@ document.addEventListener("click", async (e) => {
     }
   }
 });
-//============= display image in UI ===================== 
-students.forEach(student => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${student.fullname}</td>
-        <td>${student.gender}</td>
-        <td>${student.phone}</td>
-        <td>${student.cnic}</td>
-        <td>${student.email}</td>
-        <td>${student.course}</td>
-        <td>${student.campus}</td>
-        <td>
-            ${student.image 
-                ? `<img src="${student.image}" alt="Profile" width="50" height="50" style="border-radius:50%;">`
-                : "No Image"}
-        </td>
-        <td>
-            <button class="btn btn-sm btn-info viewBtn" data-id="${student.id}">
-                <i class="bi bi-eye"></i>
-            </button>
-            <button class="btn btn-sm btn-warning editBtn" data-id="${student.id}">
-                <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-sm btn-danger deleteBtn" data-id="${student.id}">
-                <i class="bi bi-trash"></i>
-            </button>
-        </td>
-    `;
-    tableBody.appendChild(row);
-});
-
-
-
-//=============== display image in UI start
-
-
-// document.addEventListener("DOMContentLoaded", async () => {
-//   const adminCampus = localStorage.getItem("adminCampus"); 
-//   console.log("Logged in as:", adminCampus);
-
-//   let query = supabase.from("students").select("*");
-
-//   // agar main admin hai to pura data dikhaye
-//   if (adminCampus && adminCampus !== "main") {
-//     query = query.eq("campus", adminCampus);
-//   }
-
-//   const { data, error } = await query;
-
-//   if (error) {
-//     console.error("Error fetching data:", error.message);
-//     return;
-//   }
-
-//   renderTable(data);
-// });
-
-// function renderTable(students) {
-//   const tbody = document.getElementById("studentTableBody");
-//   tbody.innerHTML = "";
-
-//   students.forEach(student => {
-//     const row = `
-//       <tr>
-//         <td>${student.rollno}</td>
-//         <td>${student.fullname}</td>
-//         <td>${student.gender}</td>
-//         <td>${student.phone}</td>
-//         <td>${student.campus}</td>
-//         <td>
-//           <button class="btn btn-sm btn-danger deleteBtn" data-id="${student.id}">Delete</button>
-//         </td>
-//       </tr>
-//     `;
-//     tbody.innerHTML += row;
-//   });
-// }
-
 
 document.addEventListener("DOMContentLoaded", async () => {
   const adminCampus = localStorage.getItem("adminCampus");
-  console.log("Logged in as:", adminCampus);  // check karne ke liye
+  console.log("Logged in as:", adminCampus);
 
   let query = client.from("students").select("*");
 
-  // Sirf "main" admin ko sab data dikhana hai
   if (adminCampus && adminCampus.toLowerCase() !== "main") {
     query = query.eq("campus", adminCampus); 
   }
@@ -364,11 +288,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  console.log("Data loaded:", data); // console me check karo filter ho raha hai ya nahi
-  renderTable(data);
+  console.log("Data loaded:", data);
+  loadStudents();   // ✅ renderTable hata diya
 });
 
-query = query.eq("campus", adminCampus);
-
-
-//=============== display image in UI END

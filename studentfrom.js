@@ -17,7 +17,6 @@ function getCampusPrefix(campus) {
   }
 }
 
-
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("studentForm");
 
@@ -139,3 +138,5 @@ form.addEventListener("submit", async (e) => {
 
 
 //=========== upload image in supabase END ================================
+
+

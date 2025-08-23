@@ -19,31 +19,8 @@
     <input type="text" id="searchInput" class="form-control filter-input" placeholder="Enter roll number or CNIC...">
     <button class="btn btn-outline-primary" onclick="filterStudents()">Filter Students</button>
 
-    <!-- Stats Cards -->
-    <div class="card-stats">
-        <div class="card text-white bg-primary">
-            <div class="card-body">
-                <h5>Total Students</h5>
-                <h3 id="totalStudents">0</h3>
-                <small>↑ 0% from last month</small>
-            </div>
-        </div>
-        <div class="card text-white bg-success">
-            <div class="card-body">
-                <h5>Active Students</h5>
-                <h3 id="activeStudents">0</h3>
-                <small>↑ 0% of total</small>
-            </div>
-        </div>
-        <div class="card text-white bg-warning">
-            <div class="card-body">
-                <h5>Pending Approval</h5>
-                <h3 id="pendingStudents">0</h3>
-                <small>Needs attention</small>
-            </div>
-        </div>
-    </div>
-
+    <div class="card-stats" id="statsContainer"></div>
+    
     <!-- Student Table -->
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
